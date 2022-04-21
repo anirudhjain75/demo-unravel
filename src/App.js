@@ -12,10 +12,18 @@ function App() {
   const [email, setEmail] = React.useState('');
   const [phoneno, setPhoneno] = React.useState('');
   const [rows, setRows] = React.useState([])
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('email');
 
   React.useEffect(() => {
-
-  }, [])
+    setRows(rows.sort((a, b) => {
+      if (order === 'asc') {
+        return a[orderBy] > b[orderBy] ? 1 : -1
+      } else {
+        return a[orderBy] < b[orderBy] ? 1 : -1
+      }
+    }))
+  }, [order, orderBy])
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -47,7 +55,7 @@ function App() {
   return (
     <div className="App">
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', flexDirection: 'column' }} >
-        <BasicTable rows={rows} />
+        <BasicTable rows={rows} order={order} orderBy={orderBy} setOrder={setOrder} setOrderBy={setOrderBy} />
         <div>
 
           <Button onClick={handleClickOpen}>Add Entry</Button>

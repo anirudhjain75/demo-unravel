@@ -6,10 +6,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { TableSortLabel } from '@mui/material';
+import { IconButton, TableSortLabel } from '@mui/material';
 import { Box } from '@mui/system';
 import { visuallyHidden } from '@mui/utils';
 import { styled } from '@mui/material/styles';
+import { Delete, Edit } from '@mui/icons-material';
 
 const headers = [
   {
@@ -40,7 +41,13 @@ const headers = [
       width: 400
     }
   },
-
+  {
+    title: "Actions",
+    key: "actions",
+    style: {
+      width: 300
+    }
+  }
 ]
 
 const commonHeaderStyle = {
@@ -51,17 +58,15 @@ const commonTableBodyCellStyle = {
   borderRight: "1px solid #ccc !important"
 }
 
-export default function BasicTable({rows}) {
-
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+export default function BasicTable({ rows, order, orderBy, setOrder, setOrderBy }) {
 
   const handleSort = (headerKey) => (event) => {
+
     const isAsc = orderBy === headerKey && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(headerKey);
   }
-  
+
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -93,6 +98,9 @@ export default function BasicTable({rows}) {
           <TableHead>
             <StyledTableRow>
               {headers.map(((header, idx) => {
+                if (header.key === "actions") {
+                  return <StyledTableCell key={header.key} sx={{ ...commonHeaderStyle, ...header.style }} value={header.key}>{header.title}</StyledTableCell>
+                }
                 if (idx == 0) {
                   return <StyledTableCell key={header.key} sx={{ ...commonHeaderStyle, ...header.style }} value={header.key}>{header.title}</StyledTableCell>
                 }
@@ -120,13 +128,7 @@ export default function BasicTable({rows}) {
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {rows.sort((a, b) => {
-              if (order === 'asc') {
-                return a[orderBy] > b[orderBy] ? 1 : -1
-              } else {
-                return a[orderBy] < b[orderBy] ? 1 : -1
-              }
-            }).map((row) => (
+            {rows.map((row) => (
               <StyledTableRow
                 key={row.eid}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -141,6 +143,14 @@ export default function BasicTable({rows}) {
                   }
                   return <StyledTableCell key={key} sx={{ ...commonTableBodyCellStyle }} align="right">{row[key]}</StyledTableCell>
                 })}
+                <StyledTableCell key={'action'} sx={{ ...commonTableBodyCellStyle }} >
+                  <IconButton>
+                    <Edit />
+                  </IconButton>
+                  <IconButton>
+                    <Delete />
+                  </IconButton>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
