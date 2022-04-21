@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -9,18 +9,7 @@ import Paper from '@mui/material/Paper';
 import { TableSortLabel } from '@mui/material';
 import { Box } from '@mui/system';
 import { visuallyHidden } from '@mui/utils';
-
-function createData(eid, name, email, phoneno) {
-  return { eid, name, email, phoneno };
-}
-
-const rows = [
-  createData(1, "Tanya", "a@meow.com", "1234567890"),
-  createData(2, "Mehru", "b@meow.com", "234567890"),
-  createData(3, "Naveen", "c@meow.com", "34567890"),
-  createData(4, "Himanshu", "d@meow.com", "4567890"),
-  createData(5, "Zangho", "e@meow.com", "567890"),
-];
+import { styled } from '@mui/material/styles';
 
 const headers = [
   {
@@ -62,7 +51,7 @@ const commonTableBodyCellStyle = {
   borderRight: "1px solid #ccc !important"
 }
 
-export default function BasicTable() {
+export default function BasicTable({rows}) {
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -72,20 +61,44 @@ export default function BasicTable() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(headerKey);
   }
+  
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+    '&:hover': {
+      backgroundColor: '#FFFACD'
+    }
+  }));
+
 
   return (
     <React.Fragment>
       <TableContainer sx={{ width: '60%' }} component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
-            <TableRow>
+            <StyledTableRow>
               {headers.map(((header, idx) => {
                 if (idx == 0) {
-                  return <TableCell sx={{ ...commonHeaderStyle, ...header.style }} value={header.key}>{header.title}</TableCell>
+                  return <StyledTableCell key={header.key} sx={{ ...commonHeaderStyle, ...header.style }} value={header.key}>{header.title}</StyledTableCell>
                 }
                 return (
                   <React.Fragment>
-                    <TableCell sx={{ ...commonHeaderStyle, ...header.style }} align='right' value={header.key} sortDirection={orderBy === header.key ? order : false}>
+                    <StyledTableCell key={header.key} sx={{ ...commonHeaderStyle, ...header.style }} align='right' value={header.key} sortDirection={orderBy === header.key ? order : false}>
                       {header.title}
                       <TableSortLabel
                         active={orderBy === header.key}
@@ -99,12 +112,12 @@ export default function BasicTable() {
                           </Box>
                         ) : null}
                       </TableSortLabel>
-                    </TableCell>
+                    </StyledTableCell>
 
                   </React.Fragment>
                 )
               }))}
-            </TableRow>
+            </StyledTableRow>
           </TableHead>
           <TableBody>
             {rows.sort((a, b) => {
@@ -114,21 +127,21 @@ export default function BasicTable() {
                 return a[orderBy] < b[orderBy] ? 1 : -1
               }
             }).map((row) => (
-              <TableRow
+              <StyledTableRow
                 key={row.eid}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 {Object.keys(row).map((key, idx) => {
                   if (idx == 0) {
                     return (
-                      <TableCell sx={{ ...commonTableBodyCellStyle }} component="th" scope="row">
+                      <StyledTableCell key={key} sx={{ ...commonTableBodyCellStyle }} component="th" scope="row">
                         {row[key]}
-                      </TableCell>
+                      </StyledTableCell>
                     )
                   }
-                  return <TableCell sx={{ ...commonTableBodyCellStyle }} align="right">{row[key]}</TableCell>
+                  return <StyledTableCell key={key} sx={{ ...commonTableBodyCellStyle }} align="right">{row[key]}</StyledTableCell>
                 })}
-              </TableRow>
+              </StyledTableRow>
             ))}
           </TableBody>
         </Table>
