@@ -69,8 +69,8 @@ export default function BasicTable({ rows, order, orderBy, setOrder, setOrderBy,
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
+      backgroundColor: '#ADFF2F',
+      color: '#000',
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
