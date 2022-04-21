@@ -58,7 +58,7 @@ const commonTableBodyCellStyle = {
   borderRight: "1px solid #ccc !important"
 }
 
-export default function BasicTable({ rows, order, orderBy, setOrder, setOrderBy }) {
+export default function BasicTable({ rows, order, orderBy, setOrder, setOrderBy, editModal }) {
 
   const handleSort = (headerKey) => (event) => {
 
@@ -144,7 +144,7 @@ export default function BasicTable({ rows, order, orderBy, setOrder, setOrderBy 
                   return <StyledTableCell key={key} sx={{ ...commonTableBodyCellStyle }} align="right">{row[key]}</StyledTableCell>
                 })}
                 <StyledTableCell key={'action'} sx={{ ...commonTableBodyCellStyle }} >
-                  <IconButton>
+                  <IconButton onClick={(e) => editModal(row)}>
                     <Edit />
                   </IconButton>
                   <IconButton>

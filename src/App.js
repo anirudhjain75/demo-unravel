@@ -14,6 +14,7 @@ function App() {
   const [rows, setRows] = React.useState([])
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('email');
+  const [isEdit, setIsEdit] = React.useState(false);
 
   React.useEffect(() => {
     setRows(rows.sort((a, b) => {
@@ -35,7 +36,17 @@ function App() {
 
   const submitEntry = () => {
     setRows(rows.concat([{ eid, name, email, phoneno }]))
-    setOpen(false);
+    setIsEdit(false)
+    setOpen(false)
+  }
+
+  const editModal = (data) => {
+    setOpen(true)
+    setIsEdit(true)
+    setEid(data.Teid)
+    setName(data.Tname)
+    setEmail(data.Temail)
+    setPhoneno(data.Tphoneno)
   }
 
   function createData(Teid, Tname, Temail, Tphoneno) {
@@ -55,7 +66,7 @@ function App() {
   return (
     <div className="App">
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', flexDirection: 'column' }} >
-        <BasicTable rows={rows} order={order} orderBy={orderBy} setOrder={setOrder} setOrderBy={setOrderBy} />
+        <BasicTable rows={rows} order={order} orderBy={orderBy} setOrder={setOrder} setOrderBy={setOrderBy} editModal={editModal} />
         <div>
 
           <Button onClick={handleClickOpen}>Add Entry</Button>
@@ -107,7 +118,7 @@ function App() {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button onClick={submitEntry}>Add</Button>
+              <Button onClick={submitEntry}>{isEdit ? 'Edit' : 'Add'}</Button>
             </DialogActions>
           </Dialog>
         </div>
